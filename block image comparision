@@ -111,7 +111,7 @@
     display: block !important;
 }
   </style>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" ></script>
 <section id="{{ section.id }}" class="{{ section.settings.addclass }}" style="padding-top:{{ section.settings.ptop }}px; padding-bottom:{{ section.settings.pbottom }}px">
  <div class="acc-bg-blue w3_bg">
    <div class="container w3_bg">
