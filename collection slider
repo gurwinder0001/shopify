@@ -1,0 +1,88 @@
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    new Swiper('.collection-swiper', {
+      slidesPerView: 3,
+      spaceBetween: 24,
+      navigation: {
+        nextEl: '.swiper-button-next',
+        prevEl: '.swiper-button-prev'
+      },
+      breakpoints: {
+        1024: { slidesPerView: 3 },
+        768: { slidesPerView: 2 },
+        480: { slidesPerView: 1 }
+      }
+    });
+  });
+</script>
+
+
+  <section id="{{ section.id }}">
+ <div class="collection-slider-container">
+  <div class="swiper collection-swiper">
+    <div class="swiper-wrapper">
+      {% for collection in collections %}
+        <div class="swiper-slide">
+          <a href="{{ collection.url }}" class="collection-slide">
+            {% if collection.image %}
+              <img src="{{ collection.image | img_url: 'master' }}" alt="{{ collection.title }}">
+            {% elsif collection.products.first %}
+              <img src="{{ collection.products.first.featured_image | img_url: 'master' }}" alt="{{ collection.title }}">
+            
+            {% endif %}
+            <h3>{{ collection.title }}</h3>
+          </a>
+        </div>
+      {% endfor %}
+    </div>
+
+    <div class="swiper-button-next"></div>
+    <div class="swiper-button-prev"></div>
+  </div>
+</div>
+</section>
+<style>
+.collection-slider-container {
+  margin: 3rem auto;
+  padding: 1rem;
+  max-width: 1200px;
+}
+.collection-slide {
+  text-align: center;
+  text-decoration: none;
+  display: block;
+  color: inherit;
+}
+.collection-slide img {
+  width: 100%;
+  height: auto;
+  border-radius: 12px;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+}
+.collection-slide h3 {
+  margin-top: 0.75rem;
+  font-size: 1.1rem;
+}
+.swiper-button-next,
+.swiper-button-prev {
+  color: #000;
+}
+</style>
+
+{% schema %}
+{
+  "name": "Custom Collection Slider",
+  "settings": [],
+  "presets": [
+    {
+      "name": "Custom Collection Slider",
+      "category": "Collections"
+    }
+  ]
+}
+{% endschema %}
