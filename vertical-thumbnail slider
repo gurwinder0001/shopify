@@ -1,0 +1,102 @@
+<!-- Slick Slider CSS CDN -->
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css"/>
+
+<div class="product-gallery-wrapper">
+  <div class="product-thumbnails">
+    {% for image in product.images %}
+      <div>
+        <img src="{{ image | img_url: '100x100' }}" alt="Thumbnail of {{ product.title }}" />
+      </div>
+    {% endfor %}
+  </div>
+
+  <div class="product-main-slider">
+    {% for image in product.images %}
+      <div>
+        <img src="{{ image | img_url: '1024x1024' }}" alt="{{ product.title }}" />
+      </div>
+    {% endfor %}
+  </div>
+</div>
+<style>
+  .product-gallery-wrapper {
+  display: flex;
+  gap: 10px;
+}
+
+.product-thumbnails {
+  width: 100px;
+}
+
+.product-thumbnails img {
+  width: 100%;
+  cursor: pointer;
+  border: 1px solid #ccc;
+  min-height:90px;
+  object-fit:cover;
+  aspect-ratio:1;
+}
+
+.product-main-slider {
+  width: calc(100% - 110px);
+}
+
+.product-main-slider img {
+  width: 100%;
+  aspect-ratio:1;
+  object-fit:cover;
+}
+.product-main-slider .slick-prev:before,
+.product-main-slider .slick-next:before{
+  font-size:30px !important;
+}
+.product-main-slider .slick-prev{
+   left:10px;
+   z-index:99;
+  }
+.product-main-slider .slick-next{
+  right:10px;
+}
+  @media(max-width:767px){
+    .product-thumbnails{
+      width:70px;
+    }
+    .product-main-slider {
+      width: calc(100% - 80px);
+    }
+  }
+</style>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+<script>
+  $(document).ready(function () {
+    $('.product-thumbnails').slick({
+      slidesToShow: 6,
+      slidesToScroll: 1,
+      asNavFor: '.product-main-slider',
+      dots: false,
+      centerMode: false,
+      focusOnSelect: true,
+      vertical: true,
+      verticalSwiping: true,
+      arrows: false,
+      loop:true,
+      responsive: [
+        {
+          breakpoint: 768,
+          settings: {
+            slidesToShow: 3
+          }
+        }
+      ]
+    });
+    $('.product-main-slider').slick({
+      slidesToShow: 1,
+      slidesToScroll: 1,
+      arrows: true,
+      fade: true,
+      asNavFor: '.product-thumbnails'
+    });
+  });
+</script>
