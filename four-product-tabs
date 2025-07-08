@@ -1,0 +1,316 @@
+<section id="{{ section.id }}" style="padding-top:{{ section.settings.ptop }}px; padding-bottom:{{ section.settings.pbottom }}px">
+  <div class="page-width container">
+    <h2 class="section-heading1">{{ section.settings.texthead }}</h2>
+    <div class="tabbedPanels">
+      <!-- Tabs Navigation -->
+      <ul class="tabs">
+        {% assign tab_index = 0 %}
+        {% for block in section.blocks %}
+          <li>
+            <a href="#panel{{ tab_index }}" class="{% if forloop.first %}active{% endif %}">{{ block.settings.text }}</a>
+          </li>
+          {% assign tab_index = tab_index | plus: 1 %}
+        {% endfor %}
+      </ul>
+      <!-- Panel Content -->
+      <div class="panelContainer">
+        {% assign panel_index = 0 %}
+        {% for block in section.blocks %}
+          <div id="panel{{ panel_index }}" class="panel" {% if forloop.first == false %} style="display: none;" {% endif %}>
+            <div class="product-cards-container">
+              {% assign product1 = all_products[block.settings.product_1] %}
+              {% if product1 != blank %}
+                <a class="product-card" href="{{ product1.url }}">
+                  <div class="product-image-wrapper">
+                    <img src="{{ product1.featured_image | img_url: 'master' }}" alt="{{ product1.title }}" class="product-image main-image">
+                    {% if product1.images.size > 1 %}
+                      <img src="{{ product1.images[1] | img_url: 'master' }}" alt="{{ product1.title }} second image" class="product-image hover-image">
+                    {% endif %}
+                  </div>
+                  <h3>{{ product1.title }}</h3>
+                  <p class="price">{{ product1.price | money }}</p>
+                  <div class="product-reviews">
+                    {% assign rating = product1.metafields.reviews.rating | default: 4.5 %}
+                    <span class="stars">
+                      {% for i in (1..5) %}
+                        {% if rating >= i %}
+                          ⭐
+                        {% else %}
+                          ☆
+                        {% endif %}
+                      {% endfor %}
+                    </span>
+                  </div>
+                </a>
+              {% endif %}
+              {% assign product2 = all_products[block.settings.product_2] %}
+              {% if product2 != blank %}
+                <a class="product-card" href="{{ product2.url }}">
+                  <div class="product-image-wrapper">
+                    <img src="{{ product2.featured_image | img_url: 'master' }}" alt="{{ product2.title }}" class="product-image main-image">
+                    {% if product2.images.size > 1 %}
+                      <img src="{{ product2.images[1] | img_url: 'master' }}" alt="{{ product2.title }} second image" class="product-image hover-image">
+                    {% endif %}
+                  </div>
+                  <h3>{{ product2.title }}</h3>
+                  <p class="price">{{ product2.price | money }}</p>
+                  <div class="product-reviews">
+                    {% assign rating = product2.metafields.reviews.rating | default: 4.5 %}
+                    <span class="stars">
+                      {% for i in (1..5) %}
+                        {% if rating >= i %}
+                          ⭐
+                        {% else %}
+                          ☆
+                        {% endif %}
+                      {% endfor %}
+                    </span>
+                  </div>
+                </a>
+              {% endif %}
+
+              {% assign product3 = all_products[block.settings.product_3] %}
+              {% if product3 != blank %}
+                <a class="product-card" href="{{ product3.url }}">
+                  <div class="product-image-wrapper">
+                    <img src="{{ product3.featured_image | img_url: 'master' }}" alt="{{ product3.title }}" class="product-image main-image">
+                    {% if product3.images.size > 1 %}
+                      <img src="{{ product3.images[1] | img_url: 'master' }}" alt="{{ product3.title }} second image" class="product-image hover-image">
+                    {% endif %}
+                  </div>
+                  <h3>{{ product3.title }}</h3>
+                  <p class="price">{{ product3.price | money }}</p>
+                  <div class="product-reviews">
+                    {% assign rating = product3.metafields.reviews.rating | default: 4.5 %}
+                    <span class="stars">
+                      {% for i in (1..5) %}
+                        {% if rating >= i %}
+                          ⭐
+                        {% else %}
+                          ☆
+                        {% endif %}
+                      {% endfor %}
+                    </span>
+                  </div>
+                </a>
+              {% endif %}
+
+              {% assign product4 = all_products[block.settings.product_4] %}
+              {% if product4 != blank %}
+                <a class="product-card" href="{{ product4.url }}">
+                  <div class="product-image-wrapper">
+                    <img src="{{ product4.featured_image | img_url: 'master' }}" alt="{{ product4.title }}" class="product-image main-image">
+                    {% if product4.images.size > 1 %}
+                      <img src="{{ product4.images[1] | img_url: 'master' }}" alt="{{ product4.title }} second image" class="product-image hover-image">
+                    {% endif %}
+                  </div>
+                  <h3>{{ product4.title }}</h3>
+                  <p class="price">{{ product4.price | money }}</p>
+                  <div class="product-reviews">
+                    {% assign rating = product4.metafields.reviews.rating | default: 4.5 %}
+                    <span class="stars">
+                      {% for i in (1..5) %}
+                        {% if rating >= i %}
+                          ⭐
+                        {% else %}
+                          ☆
+                        {% endif %}
+                      {% endfor %}
+                    </span>
+                  </div>
+                </a>
+              {% endif %}
+
+            </div>
+          </div>
+          {% assign panel_index = panel_index | plus: 1 %}
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- See More Button -->
+    <div class="custom-product-seemore">
+      <a href="{{ section.settings.link | default: '#' }}" class="banner-btn11" style="background-color: {{ section.settings.bg-color | default: 'transparent' }}; color: {{ section.settings.text-color | default: 'transparent' }};">
+        {{ section.settings.button_text | default: 'SEE MORE ARTICLES' }}
+      </a>
+    </div>
+
+  </div>
+</section>
+
+{% style %}
+
+.product-cards-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+  padding-top: 30px;
+}
+
+.product-card {
+  background: #fff;
+  border: 1px solid #e6e6e6;
+  border-radius: 10px;
+  overflow: hidden;
+  text-align: center;
+  flex: 1;
+  text-decoration: none;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.product-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.product-image-wrapper {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  max-height:450px;
+  height:400px;
+}
+
+.product-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: opacity 0.5s ease;
+}
+.product-image.hover-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0;
+}
+
+.product-card:hover .product-image.main-image {
+  opacity: 0;
+}
+
+.product-card:hover .product-image.hover-image {
+  opacity: 1;
+}
+
+.product-card h3 {
+  font-size: 16px;
+  font-weight: 800;
+  margin: 10px 0 5px;
+}
+
+.product-card .price {
+  font-size: 18px;
+  font-weight: 700;
+  color: #000;
+  margin-bottom: 5px;
+}
+
+.product-reviews {
+  margin: 10px 0;
+}
+
+.product-reviews .stars {
+  font-size: 18px;
+  color: gold;
+}
+
+.tabs {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  justify-content: center;
+  gap: 60px;
+}
+
+.tabs li {
+  text-align: center;
+}
+
+.tabs a {
+  text-decoration: none;
+  color: #333333;
+  font-size: 24px;
+  font-weight: 400;
+  transition: color 0.3s;
+}
+
+.tabs a.active {
+  color: #000000;
+  font-weight: bold;
+}
+
+h2.section-heading1 {
+  text-align: center;
+  color: #ab0033;
+  font-size: 50px;
+  font-weight: 600;
+}
+@media(max-width:767px){
+  #{{ section.id }} .tabs{ 
+    justify-content: flex-start; 
+    gap: 20px;
+    overflow-x: scroll;
+    padding-bottom: 9px;
+  }
+  #{{ section.id }} .tabs a{
+    font-size: 14px;
+     white-space:nowrap;
+     
+  }
+  #{{ section.id }} .product-card {
+    flex-basis: 45%;
+   }
+  .product-image-wrapper{
+    height:300px;
+  }
+}
+
+{% endstyle %}
+
+{% javascript %}
+$(document).ready(function() {
+  $('.tabs a').click(function(event) {
+    event.preventDefault();
+    $('.panel').hide();
+    $('.tabs a').removeClass('active');
+    $(this).addClass('active');
+
+    var panelID = $(this).attr('href');
+    $(panelID).fadeIn(500);
+  });
+
+  $('.tabs li:first a').trigger('click');
+});
+{% endjavascript %}
+
+{% schema %}
+{
+  "name": "Product Tabs",
+  "settings": [
+    { "type": "range", "min": 10, "max": 100, "step": 10, "id": "ptop", "label": "Padding Top", "default": 10 },
+    { "type": "range", "min": 10, "max": 100, "step": 10, "id": "pbottom", "label": "Padding Bottom", "default": 10 },
+    { "type": "text", "id": "texthead", "label": "Add Heading" },
+    { "type": "color", "id": "bg-color", "label": "Add Bg-color" },
+    { "type": "color", "id": "text-color", "label": "Add Text-color" },
+    { "type": "url", "id": "link", "label": "See More Link" },
+    { "type": "text", "id": "button_text", "label": "Button Text", "default": "SEE MORE ARTICLES" }
+  ],
+  "blocks": [
+    {
+      "type": "custom",
+      "name": "New Tab",
+      "settings": [
+        { "type": "text", "id": "text", "label": "Tab Heading" },
+        { "type": "product", "id": "product_1", "label": "Select Product 1" },
+        { "type": "product", "id": "product_2", "label": "Select Product 2" },
+        { "type": "product", "id": "product_3", "label": "Select Product 3" },
+        { "type": "product", "id": "product_4", "label": "Select Product 4" }
+      ]
+    }
+  ],
+  "presets": [{ "name": "Product Tabs" }]
+}
+{% endschema %}
