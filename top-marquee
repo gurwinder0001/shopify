@@ -1,0 +1,100 @@
+<style>
+  .marquee-wrapper {
+    overflow: hidden;
+    position: relative;
+    width: 100%;
+    background: #000000;
+    padding: 0.5rem 0;
+    border-top: 1px solid #000000;
+    border-bottom: 1px solid #000000;
+  }
+
+  .marquee {
+    display: flex;
+    width: fit-content;
+    animation: scroll 20s linear infinite;
+  }
+
+  .marquee:hover {
+    animation-play-state: paused;
+  }
+
+  .marquee-item {
+    display: flex;
+    align-items: center;
+    flex: 0 0 auto;
+    margin-right: 4rem;
+    white-space: nowrap;
+    font-size: 1.2rem;
+    font-weight: 500;
+    color: #333;
+  }
+  .marquee-item p{
+    padding:0;
+    margin:0;
+    color:#fff;
+    font-size:14px;
+  }
+  .marquee-item img {
+    height: 25px;
+    width: auto;
+    margin-right: 10px;
+  }
+
+  @keyframes scroll {
+    0% {
+      transform: translateX(0%);
+    }
+    100% {
+      transform: translateX(-50%);
+    }
+  }
+</style>
+
+<div class="marquee-wrapper">
+  <div class="marquee">
+    {% for block in section.blocks %}
+      <div class="marquee-item">
+     {% if block.settings.icon !=blank %}<img src="{{ block.settings.icon | img_url:'master' }}" alt="Icon">{% endif %}
+        <span>{{ block.settings.text }}</span>
+      </div>
+    {% endfor %}
+    {% for block in section.blocks %}
+      <div class="marquee-item">
+         {% if block.settings.icon !=blank %} <img src="{{ block.settings.icon | img_url:'master' }}" alt="Icon">{% endif %}
+        <span>{{ block.settings.text }}</span>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+
+
+{% schema %}
+  {
+    "name": "Custom Marquee",
+    "settings": [],
+    "blocks": [
+      {
+        "type":"marquee",
+        "name":"Marquee",
+        "settings": [
+           {
+            "type": "image_picker",
+            "id":"icon",
+            "label":"Choose Icon"
+          },
+           {
+            "type": "richtext",
+            "id":"text",
+            "label":"Content"
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "name":"Custom Marquee"
+      }
+    ]
+  }
+{% endschema %}
