@@ -1,0 +1,57 @@
+{% schema %}
+{
+  "name": "Full Width Video",
+  "settings": [
+    {
+      "type": "video",
+      "id": "shopify_video",
+      "label": "Shopify Video"
+    },
+    {
+      "type": "checkbox",
+      "id": "autoplay",
+      "label": "Autoplay",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "loop",
+      "label": "Loop",
+      "default": true
+    }
+  ],
+  "presets": [
+    {
+      "name": "Full Width Video",
+      "category": "Media"
+    }
+  ]
+}
+{% endschema %}
+ 
+<div class="video-section">
+  {%- if section.settings.shopify_video != blank -%}
+    {%- if section.settings.autoplay -%}
+      {{ section.settings.shopify_video | video_tag: autoplay: true, loop: section.settings.loop, muted: true, controls: false, playsinline: true, image_size: '2048x', preload: 'metadata' }}
+    {%- else -%}
+      {{ section.settings.shopify_video | video_tag: autoplay: false, loop: section.settings.loop, muted: false, controls: true, playsinline: true, image_size: '2048x', preload: 'metadata' }}
+    {%- endif -%}
+  {%- else -%}
+    <p>Please select a video in the section settings.</p>
+  {%- endif -%}
+</div>
+ 
+<style>
+.video-section {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+.video-section video {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 0; /* Remove rounded corners for true full width */
+  object-fit: cover;
+}
+</style>
