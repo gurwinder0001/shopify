@@ -1,0 +1,67 @@
+document.addEventListener("DOMContentLoaded", function() {
+  const forms = document.querySelectorAll(".product-option02 form");
+
+  forms.forEach(function(form) {
+    form.addEventListener("submit", function(e) {
+      e.preventDefault();
+
+      const formData = new FormData(form);
+
+      fetch('/cart/add.js', {
+        method: 'POST',
+        body: formData
+      })
+      .then(res => res.json())
+      .then(data => {
+        const cartDrawer = document.querySelector('cart-drawer');
+        if (cartDrawer) {
+          // ✅ Open drawer
+          cartDrawer.open();
+
+          // ✅ Fetch updated cart drawer section
+          fetch('/?section_id=cart-drawer')
+            .then(res => res.text())
+            .then(html => {
+              const tempDiv = document.createElement('div');
+              tempDiv.innerHTML = html;
+
+              const newItems = tempDiv.querySelector('cart-drawer-items');
+              const currentItems = cartDrawer.querySelector('cart-drawer-items');
+              if (newItems && currentItems) {
+                currentItems.innerHTML = newItems.innerHTML;
+              }
+
+              const newFooter = tempDiv.querySelector('.drawer__footer');
+              const currentFooter = cartDrawer.querySelector('.drawer__footer');
+              if (newFooter && currentFooter) {
+                currentFooter.innerHTML = newFooter.innerHTML;
+              }
+
+              const newHeading = tempDiv.querySelector('.drawer__heading');
+              const currentHeading = cartDrawer.querySelector('.drawer__heading');
+              if (newHeading && currentHeading) {
+                currentHeading.innerHTML = newHeading.innerHTML;
+              }
+
+              // ✅ Handle empty cart state
+              const emptyContent = cartDrawer.querySelector('.drawer__inner-empty');
+              if (newItems && newItems.querySelectorAll('.cart-item').length > 0) {
+                // Cart has items → remove empty state
+                cartDrawer.classList.remove('is-empty');
+                currentItems.classList.remove('is-empty');
+                if (emptyContent) emptyContent.style.display = 'none';
+              } else {
+                // Cart is empty → restore empty state
+                cartDrawer.classList.add('is-empty');
+                currentItems.classList.add('is-empty');
+                if (emptyContent) emptyContent.style.display = 'block';
+              }
+
+              document.dispatchEvent(new Event("cart:change"));
+            });
+        }
+      })
+      .catch(err => console.error("Add to cart error:", err));
+    });
+  });
+});
