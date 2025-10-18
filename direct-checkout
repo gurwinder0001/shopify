@@ -1,0 +1,1 @@
+      <a href="/cart/{{ product.selected_or_first_available_variant.id }}:1" class="quick-view-btn buy-now">buy now</a>
