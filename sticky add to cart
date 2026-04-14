@@ -1,0 +1,205 @@
+<section id="{{ section.id }}" class="sticky-atc-wrapper 
+  {% if section.settings.hide_desktop %}hide-desktop{% endif %}
+  {% if section.settings.hide_mobile %}hide-mobile{% endif %}
+">
+  <div class="sticky-atc hidden">
+    
+    <div class="sticky-atc__inner">
+
+      <!-- Product Info -->
+      <div class="sticky-atc__info">
+        <span class="sticky-title">{{ product.title }}</span>
+        <span class="sticky-price">{{ product.price | money }}</span>
+      </div>
+
+      <!-- Add to Cart -->
+      <form method="post" action="/cart/add" class="sticky-atc-form">
+        <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+        
+        <button type="submit" class="sticky-btn">
+          Add to Cart
+        </button>
+      </form>
+
+    </div>
+
+  </div>
+</section>
+
+<style>
+#{{ section.id }} .sticky-atc {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: #fff;
+  box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+  padding: 10px 15px;
+  z-index: 999;
+  transition: all 0.3s ease;
+}
+
+#{{ section.id }} .sticky-atc.hidden {
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(100%);
+}
+
+#{{ section.id }} .sticky-atc__inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#{{ section.id }} .sticky-atc__info {
+  display: flex;
+  flex-direction: column;
+}
+
+#{{ section.id }} .sticky-title {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+#{{ section.id }} .sticky-price {
+  font-size: 13px;
+  color: #666;
+}
+
+#{{ section.id }} .sticky-btn {
+  background: #000;
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius:50px;
+  cursor: pointer;
+}
+
+/* Desktop */
+@media(min-width:768px){
+  #{{ section.id }} .sticky-atc {
+    max-width: 500px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-radius: 8px;
+  }
+
+  #{{ section.id }} .sticky-atc.hidden {
+    transform: translate(-50%, 100%);
+  }
+
+  #{{ section.id }} .hide-desktop {
+    display: none !important;
+  }
+}
+
+/* Mobile */
+@media(max-width:767px){
+  #{{ section.id }} form.sticky-atc-form {
+    flex: 1 1 50%;
+  }
+
+  #{{ section.id }} .hide-mobile {
+    display: none !important;
+  }
+}
+</style>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const stickyBar = document.querySelector(".sticky-atc");
+  const stickyForm = document.querySelector(".sticky-atc-form");
+  const mainATC = document.querySelector('form[action="/cart/add"] button[type="submit"]');
+  if (!mainATC) return;
+  // ✅ SHOW / HIDE LOGIC
+  function toggleSticky() {
+    const rect = mainATC.getBoundingClientRect();
+    const isVisible = (
+      rect.top >= 0 &&
+      rect.bottom <= window.innerHeight
+    );
+    if (isVisible) {
+      stickyBar.classList.add("hidden");
+    } else {
+      stickyBar.classList.remove("hidden");
+    }
+  }
+  window.addEventListener("scroll", toggleSticky);
+  window.addEventListener("load", toggleSticky);
+  // ✅ AJAX ADD TO CART + DRAWER
+  if (stickyForm) {
+    stickyForm.addEventListener("submit", function(e) {
+      e.preventDefault();
+      const formData = new FormData(stickyForm);
+      fetch('/cart/add.js', {
+        method: 'POST',
+        body: formData
+      })
+      .then(res => res.json())
+      .then(data => {
+        const cartDrawer = document.querySelector('cart-drawer');
+        if (cartDrawer) {
+          cartDrawer.open();
+          fetch('/?section_id=cart-drawer')
+            .then(res => res.text())
+            .then(html => {
+              const tempDiv = document.createElement('div');
+              tempDiv.innerHTML = html;
+              const newItems = tempDiv.querySelector('cart-drawer-items');
+              const currentItems = cartDrawer.querySelector('cart-drawer-items');
+              if (newItems && currentItems) {
+                currentItems.innerHTML = newItems.innerHTML;
+              }
+              const newFooter = tempDiv.querySelector('.drawer__footer');
+              const currentFooter = cartDrawer.querySelector('.drawer__footer');
+              if (newFooter && currentFooter) {
+                currentFooter.innerHTML = newFooter.innerHTML;
+              }
+              const newHeading = tempDiv.querySelector('.drawer__heading');
+              const currentHeading = cartDrawer.querySelector('.drawer__heading');
+              if (newHeading && currentHeading) {
+                currentHeading.innerHTML = newHeading.innerHTML;
+              }
+              const emptyContent = cartDrawer.querySelector('.drawer__inner-empty');
+              if (newItems && newItems.querySelectorAll('.cart-item').length > 0) {
+                cartDrawer.classList.remove('is-empty');
+                currentItems.classList.remove('is-empty');
+                if (emptyContent) emptyContent.style.display = 'none';
+              } else {
+                cartDrawer.classList.add('is-empty');
+                currentItems.classList.add('is-empty');
+                if (emptyContent) emptyContent.style.display = 'block';
+              }
+              document.dispatchEvent(new Event("cart:change"));
+            });
+        }
+      })
+      .catch(err => console.error("Add to cart error:", err));
+    });
+  }
+});
+</script>
+{% schema %}
+{
+ "name":"Sticky Add to cart",
+ "settings":[
+   {
+     "type":"checkbox",
+     "id":"hide_desktop",
+     "label":"Hide on Desktop",
+     "default": false
+   },
+   {
+     "type":"checkbox",
+     "id":"hide_mobile",
+     "label":"Hide on Mobile",
+     "default": false
+   }
+ ],
+ "presets":[
+   {
+    "name":"Sticky Add to cart"
+   }
+ ]
+}
+{% endschema %}
